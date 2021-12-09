@@ -27,6 +27,7 @@ struct Basin {
 	unsigned area;
 	std::vector<std::vector<bool> > map;
 	Basin(unsigned w, unsigned h);
+	Basin(unsigned w, unsigned h, unsigned x, unsigned y) : Basin(w,h) { grow(x,y); }
 	void grow(unsigned x, unsigned y);
 	bool operator<(Basin const &b2) const { return area < b2.area; }
 };
@@ -34,8 +35,7 @@ struct Basin {
 Basin::Basin(unsigned w, unsigned h) : area(0)
 {
 	for(unsigned y = 0; y < h; ++y) {
-		std::vector<bool> v(w, false);
-		map.emplace_back(v);
+		map.emplace_back(w, false);
 	}
 }
 
@@ -71,9 +71,7 @@ unsigned task1_and_find_basins()
 			if (y > 0 && c >= data[y-1][x]) continue;
 			if (y+1 < h && c >= data[y+1][x]) continue;
 			sum += (c + 1 - '0'); 
-			Basin b(w, h);
-			b.grow(x, y);
-			basins.emplace_back(b);
+			basins.emplace_back(w, h, x, y);
 		}
 	}
 	return sum;
