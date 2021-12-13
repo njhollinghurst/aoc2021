@@ -30,8 +30,9 @@ void fold(char dir, unsigned val)
     }
     after.insert(POINT(x,y));
   }
-  swap(points, after);
-  printf("After fold %c=%u, there are %lu points\n", dir, val, points.size());
+  points = move(after);
+  printf("After fold %c=%u, there are %u points\n", dir, val,
+         (unsigned)(points.size()));
   if (dir=='x' && val < maxpoint.first) maxpoint.first = val;
   if (dir=='y' && val < maxpoint.second) maxpoint.second = val;
 }
@@ -46,7 +47,7 @@ int main()
     if (sscanf(str, "%u,%u", &x, &y) >= 2) {
       points.insert(POINT(x,y));
       if (x > maxpoint.first) maxpoint.first = x;
-      if (y > maxpoint.second) maxpoint.second = x;
+      if (y > maxpoint.second) maxpoint.second = y;
     }
     else if (sscanf(str, "fold along %c=%u", &dir, &x) >= 2) {
       assert(dir=='x' || dir=='y');
