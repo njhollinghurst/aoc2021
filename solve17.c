@@ -11,8 +11,6 @@ void rd()
   assert(n == 4);
 }
 
-#define VMAX 16384 // XXX guessed upper bound
-
 void task1()
 {
   int ubest = 0, vbest = 0, hbest = 0;
@@ -20,15 +18,29 @@ void task1()
 
   int bound_xlo = (target_xlo < 0) ? target_xlo : 0;
   int bound_xhi = (target_xhi > 0) ? target_xhi : 0;
+  int bound_ylo = (target_ylo < 0) ? target_ylo : 0;
+
+  // guess an upper bound for initial vertical velocity,
+  // noting that we always return to y=0, and steps are discrete
+  int v0max = 65536;
+  if (target_yhi < 0) {
+    v0max = -target_ylo - 1;
+  }
+  else if (target_ylo > 0) {
+    v0max = target_yhi;
+  }
+  else {
+    printf("No vertical limit!\n");
+  }
 
   for(int u0 = bound_xlo; u0 <= bound_xhi; u0++) {
-    for(int v0 = (target_ylo < 0) ? target_ylo : 0; v0 < VMAX; v0++) {
+    for(int v0 = bound_ylo; v0 <= v0max; v0++) {
       int u = u0;
       int v = v0;
       int x = 0;
       int y = 0;
       int h = 0;
-      while (y >= target_ylo && bound_xlo <= x && x <= bound_xhi &&
+      while (y >= bound_ylo && bound_xlo <= x && x <= bound_xhi &&
 	     (u != 0 || (target_xlo <= x && x <= target_xhi))) {
 	x += u;
 	y += v;
